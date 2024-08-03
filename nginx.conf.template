@@ -8,6 +8,15 @@ rtmp {
 
         application ${RTMP_APPLICATION} {
             live on;
+
+            # Allow players to remain connected whilst the
+            # stream is idle (i.e. the publisher is changing episode)
+            idle_streams on;
+            
+            # Drop the publisher if it goes idle for too long
+            drop_idle_publisher 10s;
+            
+            # Don't record
             record off;
             
             # Enable HLS
