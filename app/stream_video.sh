@@ -137,6 +137,14 @@ then
     BLOCK_REGEX=`read_blocklist`
 fi
 
+
+# Create the channel M3U
+cat << EOM > /mnt/hls/${RTMP_APPLICATION}/${RTMP_STREAMNAME}.m3u
+#EXTM3U
+#EXTINF:-1,$RTMP_STREAMNAME
+$RTMP_STREAMNAME.m3u8
+EOM
+
 cat << EOM
 Config:
 
