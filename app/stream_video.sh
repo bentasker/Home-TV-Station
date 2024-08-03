@@ -119,7 +119,7 @@ function join_by(){
 MEDIA_LIST="list_files" 
 
 # Are we in allow mode
-if [ -f /app/allowlist.txt ]
+if [ -f /app/allowlist.txt ] && [ `wc -l /app/allowlist.txt | awk '{print $1}'` -gt 0 ]
 then
     # There's an allowlist, use that
     ALLOW_MODE=true
@@ -130,7 +130,7 @@ then
 fi
 
 # Are we in allow mode
-if [ -f /app/blocklist.txt ]
+if [ -f /app/blocklist.txt ] && [ `wc -l /app/blocklist.txt | awk '{print $1}'` -gt 0 ]
 then
     # There's an blocklist, use that
     BLOCK_MODE=true
