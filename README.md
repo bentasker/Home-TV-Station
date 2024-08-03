@@ -21,3 +21,24 @@ That directory is then expected to contain the following structure
 ```
 
 The easiest example of a presentation name is a series name
+
+
+---
+
+## Constraining Candidate Videos
+
+It's possible to tell the channel that it should only stream certain presentations.
+
+### Allow List
+
+An allowlist can be written to `/app/allowlist.txt`.
+
+This list should consist of a presentation name, per line, using the same format/case as is necessary to access that directory:
+
+```text
+Big_Buck_Bunny
+Acme_The_Human_Carrot
+```
+
+
+
