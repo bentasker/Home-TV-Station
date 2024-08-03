@@ -3,7 +3,11 @@
 # Launch Nginx
 nginx -g "daemon off;" &
 
-# TODO: launch publishing script
+# Give Nginx a second to come up
+sleep 1
+
+# Start publishing video
+/app/stream_video.sh &
 
 # Wait for something to exit
 wait -n
