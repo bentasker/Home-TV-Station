@@ -59,7 +59,15 @@ function play_presentation(){
     # Use ffmpeg to stream into nginx-rtmp
     # From https://snippets.bentasker.co.uk/page-1706300952-Publish-file-to-RTMP-Server-(FFMPEG)-BASH.html
     f=$1
+    
+    # Update the record of what's playing
+    # We shouldn't wait for it to complete
+    write_play_to_influx "start" &
+    
     ffmpeg -hide_banner -loglevel error -re -i "$f" -c:v libx264 -f flv "rtmp://$RTMP_SERVER/$RTMP_APPLICATION/$RTMP_STREAMNAME"
+    
+    # Note that it finished
+    write_play_to_influx "end" &
 }
 
 function update_now_playing(){
@@ -74,6 +82,30 @@ function update_now_playing(){
     chown nobody:nogroup "$tmpfile"
     mv "$tmpfile" "/mnt/hls/${RTMP_APPLICATION}/${RTMP_STREAMNAME}-now_playing.txt";
     
+}
+
+function write_play_to_influx(){
+    # Write details of what's being played to InfluxDB
+
+    event="$1"
+    
+    # Check the functionality is enabled
+    if [ "$INFLUXDB_URL" == "" ] || [ "$INFLUXDB_BUCKET" == "" ]
+    then
+        echo "No InfluxDB Config"
+        return
+    fi
+    
+    TOK=""
+    if [ ! "$INFLUXDB_TOKEN" == "" ]
+    then
+        TOK="-H 'Authorization: Token $INFLUXDB_TOKEN'"
+    fi
+    
+    # Generate and write the point
+    curl $TOK \
+    -d "${INFLUXDB_MEASUREMENT},application=${RTMP_APPLICATION},stream=${RTMP_STREAMNAME},event=${event} series=\"$SERIES\",episode=\"$EPISODE_NAME\",publishcount=1" \
+    "$INFLUXDB_URL/api/v2/write?bucket=$INFLUXDB_BUCKET"
 }
 
 function join_by(){ 
