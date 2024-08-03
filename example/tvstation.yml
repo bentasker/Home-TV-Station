@@ -1,0 +1,133 @@
+# Define a namespace
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+    name: tv-station
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tvstation
+  name: tvstation
+  namespace: tv-station
+spec:
+  selector:
+    matchLabels:
+      app: tvstation
+  template:
+    metadata:
+      labels:
+        app: tvstation
+    spec:
+      containers:
+        - name: tvstation
+          image: ghcr.io/bentasker/home-tv-station:0.1
+          imagePullPolicy: IfNotPresent
+          env:
+          # Write play start/stop events into InfluxDB 
+          - name: INFLUXDB_URL
+            value: "http://192.168.3.84:8086"
+          - name: INFLUXDB_TOKEN
+            value: "NOTMYREALTOKEN"
+          - name: INFLUXDB_BUCKET
+            value: "Systemstats"
+            
+          # Expose the two ports
+          ports:
+            - containerPort: 80
+              name: http-hlsport
+              protocol: TCP
+            - containerPort: 1935
+              name: rtmp-tvport
+              protocol: TCP
+          # These are based on rough usage observations but
+          # are actually likely to be a lot higher than needed
+          resources:
+            requests:
+              cpu: 1
+              memory: 750Mi
+            limits:
+              cpu: 2
+              memory: 1.5Gi
+              
+          # Mount the media dir along with some configuration
+          volumeMounts:
+            - mountPath: /media
+              name: media
+            - mountPath: /app/blocklist.txt
+              name: configfiles
+              subPath: blocklist.txt
+            - mountPath: /app/allowlist.txt
+              name: configfiles
+              subPath: allowlist.txt
+            # This is a custom channel list used for the simple IPTV client
+            #
+            # With the service definition below, this makes it available at
+            # http://[ip]:8082/channels.m3u
+            - mountPath: /mnt/hls/channels.m3u
+              name: configfiles
+              subPath: channels.m3u 
+      volumes:
+      # NFS mount the media
+      - name: media
+        nfs:
+          server: 192.168.9.233
+          path: "/volume1/Series"
+          readOnly: true
+      # Everything else is in a configmap
+      - name: configfiles
+        configMap:
+          name: tv-station-config
+---
+
+# Expose via a service
+apiVersion: v1
+kind: Service
+metadata:
+  name: tvstation
+  namespace: tv-station
+spec:
+  ports:
+    - port: 8082
+      protocol: TCP
+      targetPort: http-hlsport
+      name: "hls"
+    - port: 1935
+      protocol: TCP
+      targetPort: rtmp-tvport
+      name: "rtmp"
+  # Expose via a couple of external IPs
+  externalIPs:
+     - 192.168.3.23
+     - 192.168.3.22
+  selector:
+    app: tvstation
+  sessionAffinity: None
+  type: LoadBalancer
+
+
+---
+
+# This config map can be used to set the 
+# allowlist, blocklist and custom channel list
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tv-station-config
+  namespace: tv-station  
+data:
+  allowlist.txt:
+  blocklist.txt: |
+    Prison_School
+  channels.m3u: |
+    #EXTM3U
+    #EXTINF:-1,benstv/one
+    rtmp://192.168.3.22:1935/benstv/one
+  
+---
+

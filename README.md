@@ -22,6 +22,30 @@ That directory is then expected to contain the following structure
 
 The easiest example of a presentation name is a series name
 
+---
+
+### Running
+
+The system is intended to be run as a container, whether within Docker or in a Kubernetes cluster
+
+At it's simplest, that may look like this:
+
+```sh
+docker run \
+ --name=tvstation \
+ --restart=unless-stopped \
+ -p 80:8082 \
+ -p 1935:1935 \
+ -v /path/to/media:/media \
+ ghcr.io/bentasker/home-tv-station:0.1
+```
+
+You should then be able to play
+
+* RTMP: `rtmp://127.0.0.1/benstv/one`
+* HLS: `http://127.0.0.1:8082/benstv/one.m3u8`
+
+For a more complex example, see the [example kubernetes manifest](example/tvstation.yml).
 
 ---
 
