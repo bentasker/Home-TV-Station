@@ -40,5 +40,21 @@ Big_Buck_Bunny
 Acme_The_Human_Carrot
 ```
 
+### Block List
 
+The blocklist should be provided at `/app/blocklist.txt`
 
+The entries provided are collapsed into an OR regex (with each line being one possibility), so providing
+
+```text
+Big_Buck_Bunny
+Acme_The_Human_Carrot
+```
+
+Will result in options being filtered with something like
+
+```sh
+egrep -v -e '(Big_Buck_Bunny|Acme_The_Human_Carrot)'
+```
+
+Filters are applied to both presentation and episode names: so the above would filter out both `Big_Buck_Bunny/episode1.mp4` and `documentaries/the_making_of_Big_Buck_Bunny`.

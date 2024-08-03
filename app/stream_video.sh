@@ -1,6 +1,8 @@
 #!/bin/bash
 RTMP_SERVER=${RTMP_SERVER:-"127.0.0.1"}
 ALLOW_MODE=false
+BLOCK_MODE=false
+BLOCK_REGEX=""
 
 function list_allowed(){
     echo "${ALLOWED_MEDIA}"
@@ -10,15 +12,46 @@ function list_files(){
     ls -1 "$MEDIA_DIR"
 }
 
+function filter_list(){
+    # The list of presentations is piped into this function, filter them
+    if [ "$BLOCK_REGEX" == "" ]
+    then
+        # Pipe stdin straight back out
+        cat -
+        return
+    fi
+
+    # Otherwise, we need to filter out the provided option
+    egrep --line-buffered -v -e "$BLOCK_REGEX" 
+}
+
+function read_blocklist(){
+    # We need to turn it into a regular expression
+    blockedMedia=()
+    local IFS=$'\n'
+    for line in `cat /app/blocklist.txt`
+    do
+        if [ "$line" == "" ]
+        then
+            continue
+        fi
+        blockedMedia+="$line"
+    done
+    
+    R=`join_by "|" "${blockedMedia[@]}"`
+    
+    echo "($R)"
+}
+
 function choose_series(){
     # Select a series 
     # TODO: allow set to be constrained by a config file
-    $MEDIA_LIST | sort -R | head -n 1
+    $MEDIA_LIST | filter_list | sort -R | head -n 1
 }
 
 function choose_episode(){
     series=$1
-    find "$MEDIA_DIR/$series" -regextype posix-extended -regex '.*\.(mp4|mkv|avi)' | sort -R | head -n 1
+    find "$MEDIA_DIR/$series" -regextype posix-extended -regex '.*\.(mp4|mkv|avi)' | filter_list | sort -R | head -n 1
 }
 
 
@@ -26,7 +59,7 @@ function play_presentation(){
     # Use ffmpeg to stream into nginx-rtmp
     # From https://snippets.bentasker.co.uk/page-1706300952-Publish-file-to-RTMP-Server-(FFMPEG)-BASH.html
     f=$1
-    ffmpeg -re -i "$f" -c:v libx264 -f flv "rtmp://$RTMP_SERVER/$RTMP_APPLICATION/$RTMP_STREAMNAME"
+    ffmpeg -hide_banner -loglevel error -re -i "$f" -c:v libx264 -f flv "rtmp://$RTMP_SERVER/$RTMP_APPLICATION/$RTMP_STREAMNAME"
 }
 
 function update_now_playing(){
@@ -64,12 +97,22 @@ then
     MEDIA_LIST="list_allowed"
 fi
 
+# Are we in allow mode
+if [ -f /app/blocklist.txt ]
+then
+    # There's an blocklist, use that
+    BLOCK_MODE=true
+    BLOCK_REGEX=`read_blocklist`
+fi
 
 cat << EOM
 Config:
 
 ALLOW_MODE: $ALLOW_MODE
 MEDIA_DIR: $MEDIA_DIR
+
+Compiled Block list: $BLOCK_REGEX
+
 RTMP_SERVER: $RTMP_SERVER
 RTMP_APPLICATION: $RTMP_APPLICATION
 RTMP_STREAMNAME: $RTMP_STREAMNAME
