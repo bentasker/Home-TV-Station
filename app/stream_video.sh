@@ -103,7 +103,7 @@ function write_play_to_influx(){
     fi
     
     # Generate and write the point
-    curl $TOK \
+    curl -s -o/dev/null $TOK \
     -d "${INFLUXDB_MEASUREMENT},application=${RTMP_APPLICATION},stream=${RTMP_STREAMNAME},event=${event} series=\"$SERIES\",episode=\"$EPISODE_NAME\",publishcount=1" \
     "$INFLUXDB_URL/api/v2/write?bucket=$INFLUXDB_BUCKET"
 }
