@@ -20,16 +20,30 @@ function play_presentation(){
     ffmpeg -re -i "$f" -c:v libx264 -f flv "rtmp://$RTMP_SERVER/$RTMP_APPLICATION/$RTMP_STREAMNAME"
 }
 
+function update_now_playing(){
+    series=$1
+    ep=$2
+    
+    tmpfile=`mktemp`
+    echo "$series" > "$tmpfile"
+    echo "$ep" >> "$tmpfile"
+    
+    # move into position
+    chown nobody:nogroup "$tmpfile"
+    mv "$tmpfile" "/mnt/hls/${RTMP_APPLICATION}/${RTMP_STREAMNAME}-now_playing.txt";
+    
+}
 
 while true
 do
     # Work out what to play next
     SERIES=`choose_series`
     EPISODE=`choose_episode "$SERIES"`
-
-    echo "$SERIES"
-    echo "$EPISODE"
-
+    EPISODE_NAME=`echo "$EPISODE" | awk -F'/' '{print $NF}' | awk -F'.' '{$NF=""; print $0}'`
+    
+    echo "Playing: $SERIES, $EPISODE_NAME"
+    update_now_playing "$SERIES", "$EPISODE_NAME"
+    
     # Stream it
     play_presentation "$EPISODE"
 done
