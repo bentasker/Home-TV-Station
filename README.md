@@ -58,3 +58,20 @@ egrep -v -e '(Big_Buck_Bunny|Acme_The_Human_Carrot)'
 ```
 
 Filters are applied to both presentation and episode names: so the above would filter out both `Big_Buck_Bunny/episode1.mp4` and `documentaries/the_making_of_Big_Buck_Bunny`.
+
+---
+
+### Play History
+
+The image is able to write playback history into InfluxDB whenever an episode starts (and ends).
+
+This is off by default, but can be configured by setting the relevant environment variables, for example
+```
+-e INFLUXDB_URL="http://192.168.1.5:8086" \
+-e INFLUXDB_BUCKET="mytv" \
+-e INFLUXDB_TOKEN="aaaaffff=="
+```
+
+The writes use the v2 API by default. It will still work if you're rocking 1.x - to authenticate with [the compatability API](https://docs.influxdata.com/influxdb/v1/tools/api/) (assuming you've auth enabled) simply set the token using the format `username:password`.
+
+The default measurement is `tv_station` however you can override this using env var `INFLUXDB_MEASUREMENT`.
