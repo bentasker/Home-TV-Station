@@ -1,7 +1,9 @@
 FROM tiangolo/nginx-rtmp:latest-2024-08-01
 
 RUN apt update \
-  && apt-get -y install ffmpeg gettext-base
+  && apt-get -y install ffmpeg gettext-base \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 ENV MEDIA_DIR="/media"
 ENV RTMP_SERVER="127.0.0.1"
