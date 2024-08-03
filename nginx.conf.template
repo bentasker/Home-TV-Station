@@ -6,13 +6,13 @@ rtmp {
         listen 1935;
         listen [::]:1935 ipv6only=on;
 
-        application benstv {
+        application ${RTMP_APPLICATION} {
             live on;
             record off;
             
             # Enable HLS
             hls on;
-            hls_path /mnt/hls/;
+            hls_path /mnt/hls/${RTMP_APPLICATION}/;
             hls_fragment 3;
             hls_playlist_length 60;
         }

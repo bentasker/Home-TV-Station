@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Build the config
+envsubst '$RTMP_APPLICATION' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
+
+# Ensure that the HLS output dir exists
+mkdir -p /mnt/hls/$RTMP_APPLICATION/
+
 # Launch Nginx
 nginx -g "daemon off;" &
 
