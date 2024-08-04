@@ -8,6 +8,7 @@ rtmp {
 
         application ${RTMP_APPLICATION} {
             live on;
+            buflen ${RTMP_BUFLEN};
 
             # Allow players to remain connected whilst the
             # stream is idle (i.e. the publisher is changing episode)

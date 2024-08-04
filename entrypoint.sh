@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Build the config
-envsubst '$RTMP_APPLICATION,$HLS_PLAYLISTLENGTH,$HLS_FRAGLENGTH,$HTTP_BASEURL' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
+envsubst '$RTMP_APPLICATION,$HLS_PLAYLISTLENGTH,$HLS_FRAGLENGTH,$HTTP_BASEURL,$RTMP_BUFLEN' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
 
 # Ensure that the HLS output dir exists
 mkdir -p /mnt/hls/$RTMP_APPLICATION/
