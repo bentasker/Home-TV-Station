@@ -193,11 +193,9 @@ do
                 then
                     # Go ahead and play
                     break
-                else
-                    echo "Control file exists but is not in playstate"
                 fi
             fi
-            echo "$CONTROL_FILE_LOC/play_stream doesn't exist"
+
             # Otherwise, recheck periodically
             sleep 1
         done
