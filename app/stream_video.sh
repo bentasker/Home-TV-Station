@@ -80,6 +80,30 @@ function play_presentation(){
     write_play_to_influx "end" &
 }
 
+function play_testcard(){
+    # Publish the testcard
+   ffmpeg \
+    -hide_banner \
+    -loglevel error \
+    -f image2 \
+    -loop 1 \
+    -i /app/images/test-card-bbc-two.png \
+    -f flv \
+    "rtmp://$RTMP_SERVER/$RTMP_APPLICATION/$RTMP_STREAMNAME" &
+    
+    ffmpeg_pid=$!
+    
+    while true
+    do
+        if [ ! -f "$CONTROL_FILE_LOC/testcard" ]
+        then
+            kill -9 "$ffmpeg_pid"
+            break
+        fi
+        sleep 1
+    done    
+}
+
 function update_now_playing(){
     series=$1
     ep=$2
@@ -200,6 +224,12 @@ do
             sleep 1
         done
     
+    fi
+    
+    # Temporary - we'll need to check time bounds (TODO)
+    if [ -f "$CONTROL_FILE_LOC/testcard" ]
+    then
+        play_testcard
     fi
     
     echo "Playing: $SERIES, $EPISODE_NAME"
