@@ -30,6 +30,11 @@ ENV HLS_PLAYLISTLENGTH="8"
 ENV CONTROL_FILES_ENABLED="false"
 ENV CONTROL_FILE_LOC="/tmp/control"
 
+# These require HHMM
+ENV SCHEDULE_START_TIME="0700"
+ENV SCHEDULE_END_TIME="2300"
+
+
 COPY entrypoint.sh /entrypoint.sh
 COPY app/ /app
 COPY nginx.conf.template /etc/nginx/nginx.conf.template

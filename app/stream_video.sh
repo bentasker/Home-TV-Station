@@ -25,6 +25,30 @@ function filter_list(){
     egrep --line-buffered -v -e "$BLOCK_REGEX" 
 }
 
+function in_scheduled_time(){
+    # Check whether there's a schedule set 
+    #
+    # Returns 0 if we should play media 
+    # or 1 if we're in a blackout
+    if [ "$SCHEDULE_START_TIME" == "" ] || [ "$SCHEDULE_END_TIME" == "" ]
+    then
+        echo 0
+        return
+    fi
+
+    now=$(date -u +'%H%M')
+    if [ $now -ge $SCHEDULE_START_TIME ] && [ $now -le $SCHEDULE_END_TIME ]
+    then 
+        # In bounds
+        echo 0
+        return
+    fi
+    
+    # If we got this far, we're out of bounds
+    echo 1
+    return
+}
+
 function read_blocklist(){
     # We need to turn it into a regular expression
     blockedMedia=()
@@ -109,7 +133,7 @@ function play_testcard(){
     
     while true
     do
-        if [ ! -f "$CONTROL_FILE_LOC/testcard" ]
+        if [ "`in_scheduled_time`" == "0" ]
         then
             kill -9 "$ffmpeg_pid"
             break
@@ -241,7 +265,7 @@ do
     fi
     
     # Temporary - we'll need to check time bounds (TODO)
-    if [ -f "$CONTROL_FILE_LOC/testcard" ]
+    if [ "`in_scheduled_time`" == "1" ]
     then
         play_testcard
     fi
