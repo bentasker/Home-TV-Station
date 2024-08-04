@@ -1,7 +1,7 @@
 FROM tiangolo/nginx-rtmp:latest-2024-08-01
 
 RUN apt update \
-  && apt-get -y install ffmpeg gettext-base \
+  && apt-get -y install ffmpeg gettext-base python3-flask \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
@@ -25,6 +25,7 @@ ENV FFMPEG_BUFSIZE="700k"
 ENV HLS_FRAGLENGTH="2"
 ENV HLS_PLAYLISTLENGTH="8"
 
+ENV CONTROL_FILE_LOC="/tmp/control"
 
 COPY entrypoint.sh /entrypoint.sh
 COPY app/ /app

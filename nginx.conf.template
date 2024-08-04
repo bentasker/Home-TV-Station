@@ -16,6 +16,9 @@ rtmp {
             # Drop the publisher if it goes idle for too long
             drop_idle_publisher 10s;
             
+            # Call the control hook
+            on_play http://127.0.0.1:3000/play;
+            
             # Don't record
             record off;
             

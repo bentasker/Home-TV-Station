@@ -6,6 +6,10 @@ envsubst '$RTMP_APPLICATION,$HLS_PLAYLISTLENGTH,$HLS_FRAGLENGTH,$HTTP_BASEURL' <
 # Ensure that the HLS output dir exists
 mkdir -p /mnt/hls/$RTMP_APPLICATION/
 
+# Stand up the control server
+mkdir -p "$CONTROL_FILE_LOC"
+python3 /app/control.py &
+
 # Launch Nginx
 nginx -g "daemon off;" &
 
