@@ -272,9 +272,22 @@ do
         play_testcard
     fi
     
+    # If there are any clients on the temporary stream, move them back
+    if [ "$RTMP_FORCE_REDIRECT" == "true" ]
+    then    
+        curl -v "http://127.0.0.1/control/redirect/subscriber?app=${RTMP_APPLICATION}&name=${RTMP_STREAMNAME}.tmp&newname=${RTMP_STREAMNAME}"    
+    fi
+    
     echo "Playing: $SERIES, $EPISODE_NAME"
     update_now_playing "$SERIES", "$EPISODE_NAME"
     
     # Stream it
     play_presentation "$EPISODE"
+    
+    # Should we force clients to disconnect and reconnect?
+    if [ "$RTMP_FORCE_REDIRECT" == "true" ]
+    then
+        echo "Forcing redirect"
+        curl -v "http://127.0.0.1/control/redirect/subscriber?app=${RTMP_APPLICATION}&name=${RTMP_STREAMNAME}&newname=${RTMP_STREAMNAME}.tmp"
+    fi    
 done
