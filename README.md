@@ -4,6 +4,7 @@ This image runs both `ffmpeg` and `nginx-rtmp`.
 
 The idea is that it should randomly select an episode from a media store and then use `ffmpeg` to push that media into `nginx-rtmp` in order to provide an always on channel
 
+Project management can be found in my [Gitlab mirror](https://projects.bentasker.co.uk/gils_projects/project/project-management-only/home-tv-station.html).
 
 ----
 
@@ -113,4 +114,24 @@ FFMPEG_MAXRATE="2M"
 FFMPEG_BUFSIZE="700k"
 ```
 
-More information on how to use these can be found in the [ffmpeg documentation](https://trac.ffmpeg.org/wiki/Limiting%20the%20output%20bitrate).
+More information on how to use these can be found in the [FFmpeg documentation](https://trac.ffmpeg.org/wiki/Limiting%20the%20output%20bitrate).
+
+
+---
+
+### HTTP API
+
+The system exposes an extremely simple HTTP API:
+
+#### `/api/next` 
+
+Kill the current stream and proceed to the next. Expects a valid app and stream name in POST data
+```sh
+curl -d 'app=benstv&name=one' http://127.0.0.1:8080/api/next
+```
+
+---
+
+### License
+
+Released under [GNU GPL v3](LICENSE)

@@ -42,5 +42,6 @@ ENV SCHEDULE_END_TIME=""
 COPY entrypoint.sh /entrypoint.sh
 COPY app/ /app
 COPY nginx.conf.template /etc/nginx/nginx.conf.template
+COPY LICENSE /LICENSE
 
 CMD ["/entrypoint.sh"]
