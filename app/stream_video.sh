@@ -64,7 +64,17 @@ function play_presentation(){
     # We shouldn't wait for it to complete
     write_play_to_influx "start" &
     
-    ffmpeg -hide_banner -loglevel error -re -i "$f" -c:v libx264 -f flv "rtmp://$RTMP_SERVER/$RTMP_APPLICATION/$RTMP_STREAMNAME"
+    ffmpeg \
+    -hide_banner \
+    -loglevel error \
+    -re \
+    -i "$f" \
+    -c:v libx264 \
+    -b:v $FFMPEG_BITRATE \
+    -maxrate $FFMPEG_MAXRATE \
+    -bufsize $FFMPEG_BUFSIZE \
+    -f flv \
+    "rtmp://$RTMP_SERVER/$RTMP_APPLICATION/$RTMP_STREAMNAME"
     
     # Note that it finished
     write_play_to_influx "end" &

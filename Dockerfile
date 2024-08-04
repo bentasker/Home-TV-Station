@@ -17,6 +17,10 @@ ENV INFLUXDB_TOKEN=""
 ENV INFLUXDB_BUCKET=""
 ENV INFLUXDB_MEASUREMENT="tv_station"
 
+ENV FFMPEG_BITRATE="1500k"
+ENV FFMPEG_MAXRATE="2M"
+ENV FFMPEG_BUFSIZE="700k"
+
 COPY entrypoint.sh /entrypoint.sh
 COPY app/ /app
 COPY nginx.conf.template /etc/nginx/nginx.conf.template
