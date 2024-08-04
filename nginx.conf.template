@@ -5,10 +5,11 @@ rtmp {
     server {
         listen 1935;
         listen [::]:1935 ipv6only=on;
-
+        buflen ${RTMP_BUFLEN};
+        
         application ${RTMP_APPLICATION} {
             live on;
-            buflen ${RTMP_BUFLEN};
+
 
             # Allow players to remain connected whilst the
             # stream is idle (i.e. the publisher is changing episode)
