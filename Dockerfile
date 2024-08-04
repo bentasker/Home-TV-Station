@@ -24,6 +24,7 @@ ENV FFMPEG_MAXRATE="2M"
 ENV FFMPEG_BUFSIZE="700k"
 
 ENV FFMPEG_SCALE_FLAG="scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:-1:-1:color=black"
+ENV FFMPEG_THREADS=0
 
 # HLS Settings
 ENV HLS_FRAGLENGTH="2"
