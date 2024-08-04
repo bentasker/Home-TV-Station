@@ -24,7 +24,7 @@ rtmp {
             hls_path /mnt/hls/${RTMP_APPLICATION}/;
             hls_fragment ${HLS_FRAGLENGTH};
             hls_playlist_length ${HLS_PLAYLISTLENGTH};
-            hls_base_url ${HTTP_BASEURL};
+            hls_base_url ${HTTP_BASEURL}/${RTMP_APPLICATION}/;
         }
     }
 }
