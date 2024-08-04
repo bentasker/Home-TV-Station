@@ -22,8 +22,9 @@ rtmp {
             # Enable HLS
             hls on;
             hls_path /mnt/hls/${RTMP_APPLICATION}/;
-            hls_fragment 3;
-            hls_playlist_length 60;
+            hls_fragment ${HLS_FRAGLENGTH};
+            hls_playlist_length ${HLS_PLAYLISTLENGTH};
+            hls_base_url ${HTTP_BASEURL};
         }
     }
 }
