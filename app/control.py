@@ -82,6 +82,23 @@ def playdone():
     
     return '', 200;
 
+@app.route('/api/next',methods = ['POST'])
+def next():
+    # Kill the current playback to skip onto the next
+    app = request.form['app']
+    stream = request.form['name']
+    
+    print(f"Received next for {app}/{stream}")
+    
+    if app != RTMP_APPLICATION or stream != RTMP_STREAM:
+        # Not our responsibility, approve playback and move on
+        print(f"{RTMP_APPLICATION} or stream != {RTMP_STREAM}")
+        return '', 200;
+
+    # Kill ffmpeg
+    os.system('pkill ffmpeg')
+    return '', 200;
+
 
 if __name__ == '__main__':
     
