@@ -69,11 +69,15 @@ function play_presentation(){
     -loglevel error \
     -re \
     -i "$f" \
+    -c:a aac \
     -c:v libx264 \
     -b:v $FFMPEG_BITRATE \
     -maxrate $FFMPEG_MAXRATE \
     -bufsize $FFMPEG_BUFSIZE \
+    -pix_fmt yuv420p \
+    -filter:v fps=24 \
     -f flv \
+    -vf "$FFMPEG_SCALE_FLAG" \
     "rtmp://$RTMP_SERVER/$RTMP_APPLICATION/$RTMP_STREAMNAME"
     
     # Note that it finished
@@ -85,10 +89,20 @@ function play_testcard(){
    ffmpeg \
     -hide_banner \
     -loglevel error \
+    -re \
+    -f lavfi \
+    -i anullsrc=channel_layout=stereo:sample_rate=44100 \
     -f image2 \
     -loop 1 \
     -i /app/images/test-card-bbc-two.png \
+    -c:a aac \
+    -c:v libx264 \
+    -b:v $FFMPEG_BITRATE \
+    -maxrate $FFMPEG_MAXRATE \
+    -bufsize $FFMPEG_BUFSIZE \
+    -pix_fmt yuv420p \
     -f flv \
+    -vf "$FFMPEG_SCALE_FLAG" \
     "rtmp://$RTMP_SERVER/$RTMP_APPLICATION/$RTMP_STREAMNAME" &
     
     ffmpeg_pid=$!
