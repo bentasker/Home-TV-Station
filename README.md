@@ -99,3 +99,18 @@ This is off by default, but can be configured by setting the relevant environmen
 The writes use the v2 API by default. It will still work if you're rocking 1.x - to authenticate with [the compatability API](https://docs.influxdata.com/influxdb/v1/tools/api/) (assuming you've auth enabled) simply set the token using the format `username:password`.
 
 The default measurement is `tv_station` however you can override this using env var `INFLUXDB_MEASUREMENT`.
+
+---
+
+### Media Tuning
+
+It's possible to have the publishing process cap the bitrate which will be streamed in.
+
+This is controlled by the following 3 environment variables
+```
+FFMPEG_BITRATE="1500k"
+FFMPEG_MAXRATE="2M"
+FFMPEG_BUFSIZE="700k"
+```
+
+More information on how to use these can be found in the [ffmpeg documentation](https://trac.ffmpeg.org/wiki/Limiting%20the%20output%20bitrate).
