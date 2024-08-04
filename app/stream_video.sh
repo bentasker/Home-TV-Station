@@ -180,6 +180,30 @@ do
     EPISODE=`choose_episode "$SERIES"`
     EPISODE_NAME=`echo "$EPISODE" | awk -F'/' '{print $NF}' | awk -F'.' '{$NF=""; print $0}'`
     
+    if [ "$CONTROL_FILES_ENABLED" == "true" ]
+    then
+        echo "Checking for play control state"
+        # Check whether we're authorised to play
+        while true
+        do
+            if [ -f "$CONTROL_FILE_LOC/play_stream" ]
+            then
+                grep -q play "$CONTROL_FILE_LOC/play_stream"
+                if [ "$?" == "0" ]
+                then
+                    # Go ahead and play
+                    break
+                else
+                    echo "Control file exists but is not in playstate"
+                fi
+            fi
+            echo "$CONTROL_FILE_LOC/play_stream doesn't exist"
+            # Otherwise, recheck periodically
+            sleep 1
+        done
+    
+    fi
+    
     echo "Playing: $SERIES, $EPISODE_NAME"
     update_now_playing "$SERIES", "$EPISODE_NAME"
     
