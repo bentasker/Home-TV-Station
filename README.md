@@ -103,6 +103,25 @@ The default measurement is `tv_station` however you can override this using env 
 
 ---
 
+### Broadcast Window
+
+It's possible to tell the system that it should only broadcast media during a specific time window (at the end of the window it'll finish the current presentation before cutting off).
+
+Outside of that time, it'll broadcast a test card:
+
+![A BBC testcard](/app/images/test-card-bbc-two.png)
+
+The broadcast window is set with the following env variables
+
+```sh
+SCHEDULE_START_TIME="0700"
+SCHEDULE_END_TIME="2330"
+```
+
+Times should be specified using UTC.
+
+---
+
 ### Media Tuning
 
 It's possible to have the publishing process cap the bitrate which will be streamed in.
@@ -118,6 +137,8 @@ More information on how to use these can be found in the [FFmpeg documentation](
 
 
 ---
+
+
 
 ### HTTP API
 

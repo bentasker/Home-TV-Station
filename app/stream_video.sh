@@ -126,7 +126,7 @@ function play_testcard(){
     -maxrate $FFMPEG_MAXRATE \
     -bufsize $FFMPEG_BUFSIZE \
     -pix_fmt yuv420p \
-    -threads $FFMPEG_THREADS \    
+    -threads $FFMPEG_THREADS \
     -f flv \
     -vf "$FFMPEG_SCALE_FLAG" \
     "rtmp://$RTMP_SERVER/$RTMP_APPLICATION/$RTMP_STREAMNAME" &
