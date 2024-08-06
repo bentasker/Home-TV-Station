@@ -5,6 +5,9 @@ RUN apt update \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
+  
+ENV CONTAINER_MODE="combined"  
+  
 ENV MEDIA_DIR="/media"
 ENV RTMP_SERVER="127.0.0.1"
 ENV RTMP_APPLICATION="benstv"
