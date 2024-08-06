@@ -122,6 +122,17 @@ Times should be specified using UTC.
 
 ---
 
+### Dynamic Publishing
+
+Rather than having a `ffmpeg` process constantly active (regardless of whether anyone's watching), RTMP streams also support dynamic publishing - if no player is subscribed, the system won't play the next episode (it'll be triggered as soon as someone connects).
+
+This bring a number of advantages
+
+* Preservation of resources: CPU + electricity isn't consumed streaming something that no-one's watching
+* Never miss the beginning: because the system won't start the stream til someone's watching, you're far less likely to tune-in mid episode
+
+---
+
 ### Media Tuning
 
 It's possible to have the publishing process cap the bitrate which will be streamed in.
