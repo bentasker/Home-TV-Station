@@ -36,6 +36,7 @@ docker run \
  --name=tvstation \
  --restart=unless-stopped \
  -p 80:8082 \
+ -p 8080:8083 \
  -p 1935:1935 \
  -v /path/to/media:/media \
  ghcr.io/bentasker/home-tv-station:0.1
@@ -86,7 +87,7 @@ Filters are applied to both presentation and episode names: so the above would f
 
 ---
 
-### Play History
+### Play History and Stats
 
 The image is able to write playback history into InfluxDB whenever an episode starts (and ends).
 
@@ -97,9 +98,19 @@ This is off by default, but can be configured by setting the relevant environmen
 -e INFLUXDB_TOKEN="aaaaffff=="
 ```
 
+A process within the container will also periodically (controllable via `INFLUXDB_POLL_INTERVAL`) poll to get a count of active clients per stream.
+
 The writes use the v2 API by default. It will still work if you're rocking 1.x - to authenticate with [the compatability API](https://docs.influxdata.com/influxdb/v1/tools/api/) (assuming you've auth enabled) simply set the token using the format `username:password`.
 
 The default measurement is `tv_station` however you can override this using env var `INFLUXDB_MEASUREMENT`.
+
+Points within that measurement carry a tag `event` with one of the following values
+
+- `start`: a new episode has started being published
+- `end`: an episode finished being published
+- `statsrun`: data from the stats poller
+
+If a broadcast window has been specified, start and stop events will be written at each transition using the series value `station_offline` and an episode name of `test_card`.
 
 ---
 
@@ -153,7 +164,7 @@ More information on how to use these can be found in the [FFmpeg documentation](
 
 ### HTTP API
 
-The system exposes an extremely simple HTTP API:
+The system exposes an extremely simple HTTP API on port 8080.
 
 #### `/api/next` 
 
