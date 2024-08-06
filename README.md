@@ -153,6 +153,24 @@ curl -d 'app=benstv&name=one' http://127.0.0.1:8080/api/next
 
 ---
 
+### Container Modes
+
+As of [project-management-only/home-tv-station#14](https://projects.bentasker.co.uk/gils_projects/issue/project-management-only/home-tv-station/14.html), it's possible to put the container into one of three modes:
+
+* `combined` (default): run everything
+* `production`: only run the publisher process
+* `server`: only run Nginx
+
+This means that pods dedicated to publishing into a specific stream can be spun up.
+
+There are some caveats:
+
+* All must publish under the same RTMP application name (if you want others, you'll need to override the Nginx config)
+* The control API (including dynamic publishing) won't work with these channels
+
+
+---
+
 ### License
 
 Released under [GNU GPL v3](LICENSE)
