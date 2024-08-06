@@ -1,4 +1,4 @@
-worker_processes auto;
+worker_processes ${RTMP_NUM_WORKERS};
 rtmp_auto_push on;
 events {}
 rtmp {
@@ -6,7 +6,9 @@ rtmp {
         listen 1935;
         listen [::]:1935 ipv6only=on;
         buflen ${RTMP_BUFLEN};
-        
+        application test2 {
+            live on;
+        }
         application ${RTMP_APPLICATION} {
             live on;
 
@@ -67,6 +69,10 @@ http {
         
         location /control {
             rtmp_control all;
+        }
+        
+        location /stats {
+            rtmp_stat all;
         }
         
     }

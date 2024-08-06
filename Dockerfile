@@ -1,7 +1,7 @@
 FROM tiangolo/nginx-rtmp:latest-2024-08-01
 
 RUN apt update \
-  && apt-get -y install ffmpeg gettext-base python3-flask \
+  && apt-get -y install ffmpeg gettext-base python3-flask python3-requests \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
@@ -15,6 +15,13 @@ ENV RTMP_STREAMNAME="one"
 ENV HTTP_BASEURL="../"
 ENV RTMP_BASEURL=""
 
+#  By default, we use a single nginx-rtmp worker for a number of reasons:
+#
+# - to ensure that rtmp_stat reports full stats
+# - Because multi-worker live streaming replication is wasted energy in a system that'll only see a few clients at once
+#
+ENV RTMP_NUM_WORKERS="1"
+
 ENV RTMP_BUFLEN="5s"
 ENV RTMP_FORCE_REDIRECT="false"
 
@@ -22,6 +29,9 @@ ENV INFLUXDB_URL=""
 ENV INFLUXDB_TOKEN=""
 ENV INFLUXDB_BUCKET=""
 ENV INFLUXDB_MEASUREMENT="tv_station"
+
+# How often should we poll for playback stats
+ENV INFLUXDB_POLL_INTERVAL="30"
 
 ENV FFMPEG_BITRATE="1500k"
 ENV FFMPEG_MAXRATE="2M"
