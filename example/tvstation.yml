@@ -42,6 +42,9 @@ spec:
             - containerPort: 80
               name: http-hlsport
               protocol: TCP
+            - containerPort: 8080
+              name: tvstation-api
+              protocol: TCP
             - containerPort: 1935
               name: rtmp-tvport
               protocol: TCP
@@ -97,6 +100,10 @@ spec:
       protocol: TCP
       targetPort: http-hlsport
       name: "hls"
+    - port: 8083
+      protocol: TCP
+      targetPort: tvstation-api
+      name: "api"
     - port: 1935
       protocol: TCP
       targetPort: rtmp-tvport
