@@ -110,7 +110,12 @@ function play_presentation(){
 }
 
 function play_testcard(){
-    # Publish the testcard
+   # Publish the testcard
+    
+   # Note the start time in Influx
+   write_play_to_influx "start" &
+
+   # Stream the card
    ffmpeg \
     -hide_banner \
     -loglevel error \
@@ -138,6 +143,7 @@ function play_testcard(){
         if [ "`in_scheduled_time`" == "0" ]
         then
             kill -9 "$ffmpeg_pid"
+            write_play_to_influx "end" &
             break
         fi
         sleep 1
@@ -266,10 +272,13 @@ do
     
     fi
     
-    # Temporary - we'll need to check time bounds (TODO)
+    # Check time bounds, if we're outside them trigger the testcard
     if [ "`in_scheduled_time`" == "1" ]
     then
+        SERIES="station_offline"
+        EPISODE="test_card"
         play_testcard
+        continue
     fi
     
     # If there are any clients on the temporary stream, move them back
