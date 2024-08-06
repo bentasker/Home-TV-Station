@@ -76,4 +76,21 @@ http {
         }
         
     }
+    
+    server {
+        listen 8080;
+        root /mnt/hls;
+        
+        location /api {
+            proxy_pass http://127.0.0.1:3000;
+        }
+        
+        location /control {
+            rtmp_control all;
+        }
+        
+        location /stats {
+            rtmp_stat all;
+        }
+    }
 }
