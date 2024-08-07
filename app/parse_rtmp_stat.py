@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 #
 # Fetch RTMP stats from nginx
+#
+# Copyright (c) 2024 B Tasker
+# Released under GNU GPL V3
+# See LICENSE
+#
 
 import os
 import requests

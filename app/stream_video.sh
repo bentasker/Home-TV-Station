@@ -1,4 +1,12 @@
 #!/bin/bash
+#
+# Automatic content selection and publishing
+#
+# Copyright (c) 2024 B Tasker
+# Released under GNU GPL V3
+# See LICENSE
+#
+
 RTMP_SERVER=${RTMP_SERVER:-"127.0.0.1"}
 ALLOW_MODE=false
 BLOCK_MODE=false

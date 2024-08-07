@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 #
 # Simple HTTP control server
-
+#
+# Copyright (c) 2024 B Tasker
+# Released under GNU GPL V3
+# See LICENSE
+#
 
 import os
 

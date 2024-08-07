@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# Copyright (c) 2024 B Tasker
+# Released under GNU GPL V3
+# See LICENSE
+#
 
 # Servers should only run in combined or server mode
 #
