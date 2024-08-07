@@ -6,6 +6,9 @@ The idea is that it should randomly select an episode from a media store and the
 
 Project management can be found in my [Gitlab mirror](https://projects.bentasker.co.uk/gils_projects/project/project-management-only/home-tv-station.html).
 
+The background on how this came into being can be found in [Building My Own Streaming TV Station](https://www.bentasker.co.uk/posts/blog/software-development/creating-my-own-streaming-television-channel.html).
+
+
 ----
 
 ### Media Directory Structure
@@ -39,7 +42,7 @@ docker run \
  -p 8080:8083 \
  -p 1935:1935 \
  -v /path/to/media:/media \
- ghcr.io/bentasker/home-tv-station:0.1
+ ghcr.io/bentasker/home-tv-station:0.3
 ```
 
 You should then be able to play
