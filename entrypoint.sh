@@ -24,7 +24,7 @@ then
     sleep 1
     
     # Launch the stats collector
-    /app/parse_rtmp_stat.py http://127.0.0.1/stats
+    /app/parse_rtmp_stat.py http://127.0.0.1/stats &
 fi
 
 # Publisher process should only run in combined or publisher mode
